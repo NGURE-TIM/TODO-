@@ -1,28 +1,54 @@
-
-
-
+import 'package:dartz/dartz.dart';
+import 'package:todo/features/todo/data/database/todo_remote_database.dart';
 import 'package:todo/features/todo/domain/entities/todo.dart';
 import 'package:todo/features/todo/domain/repositories/todo_repository.dart';
 
-class TodoRepositoryImpl implements TodoRepository{
+import '../../../../shared/error/error_handling/error.dart';
+
+class TodoRepositoryImpl implements TodoRepository
+{
+  final TodoRemoteDatabase remoteDatabase;
+
+  TodoRepositoryImpl(this.remoteDatabase);
+  
   @override
-  Future<Todo> add(Todo todo) async {
-    // TODO: implement add
-    throw UnimplementedError();
+  Future<Either<Todo, Failure>> add(Todo todo) async {
+     final results = await remoteDatabase.add(todo);
+    try{
+      return(Left(results));
+    }catch(e){
+return right(Failure(failureMessage: "failureMessage"));
+    }
+  
   }
   @override
-  Future<Todo> edit(Todo todo) async {
-    // TODO: implement edit
-    throw UnimplementedError();
+  Future<Either<Todo, Failure>> edit(Todo todo) async {
+    final results = await  remoteDatabase.edit(todo);
+    try{
+      return(Left(results));
+    }catch(e){
+return right(Failure(failureMessage: "failureMessage"));
+    }
+  
   }
   @override
-  Future<Todo> delete(Todo todo) async {
-    // TODO: implement delete
-    throw UnimplementedError();
+  Future<Either<Todo, Failure>> delete(Todo todo) async {
+    final results = await remoteDatabase.delete(todo);
+    try{
+      return(Left(results));
+    }catch(e){
+return right(Failure(failureMessage: "failureMessage"));
+    }
+  
   }
   @override
-  Future<List<Todo>> getAll() async {
-    // TODO: implement getAll
-    throw UnimplementedError();
+  Future<Either<Failure, List<Todo>>> getAll() async {
+      final results = await remoteDatabase.getAll();
+     try{
+      return(Right(results));
+    }catch(e){
+return left(Failure(failureMessage: "failureMessage"));
+    }
+  
   }
 }
